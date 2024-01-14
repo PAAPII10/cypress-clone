@@ -13,7 +13,11 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
   if (!res.socket.server.io) {
     const httpServer: NetServer = res.socket.server as any;
 
-    const io = new ServerIO(httpServer);
+    const io = new ServerIO(httpServer, {
+      cors: {
+        origin: process.env.NEXT_PUBLIC_SITE_URL,
+      },
+    });
 
     io.on("connect", (socket) => {
       const _socket = socket;
