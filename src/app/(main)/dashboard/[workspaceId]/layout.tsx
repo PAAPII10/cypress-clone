@@ -10,8 +10,10 @@ interface ILayout {
 const layout = ({ children, params }: ILayout) => {
   return (
     <main className="flex overflow-hidden h-screen w-screen">
+      {/* @ts-expect-error Server Component */}
       <Sidebar params={params} />
       <MobileSidebar>
+        {/* @ts-expect-error Server Component */}
         <Sidebar params={params} className="w-screen inline-block sm:hidden" />
       </MobileSidebar>
 

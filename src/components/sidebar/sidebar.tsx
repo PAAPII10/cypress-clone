@@ -81,6 +81,7 @@ const Sidebar = async ({ params, className }: ISidebarProps) => {
           />
         </ScrollArea>
       </div>
+      {/* @ts-expect-error Server Component */}
       <UserCard subscription={subscriptionData} />
     </aside>
   );
