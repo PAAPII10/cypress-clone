@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import { io as ClientIO } from "socket.io-client";
+import { useSupabaseUser } from "./supabase-user-provider";
 
 interface ISocketProviderProps {
   children: ReactNode;
@@ -28,31 +29,34 @@ export const useSocket = () => {
 };
 
 export const SocketProvider = ({ children }: ISocketProviderProps) => {
+  const { user } = useSupabaseUser();
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const socketInstance = new (ClientIO as any)();
+    if (user) {
+      const socketInstance = new (ClientIO as any)();
 
-    socketInstance.on("connect", () => {
-      setIsConnected(true);
-    });
+      socketInstance.on("connect", () => {
+        setIsConnected(true);
+      });
 
-    socketInstance.on("disconnect", () => {
-      setIsConnected(false);
-    });
+      socketInstance.on("disconnect", () => {
+        setIsConnected(false);
+      });
 
-    socketInstance.on("connect_error", async (err: any) => {
-      console.log(`connect_error due to ${err.message}`);
-      await fetch("/api/socket/io");
-    });
+      socketInstance.on("connect_error", async (err: any) => {
+        console.log(`connect_error due to ${err.message}`);
+        await fetch("/api/socket/io");
+      });
 
-    setSocket(socketInstance);
+      setSocket(socketInstance);
 
-    return () => {
-      socketInstance.disconnect();
-    };
-  }, []);
+      return () => {
+        socketInstance.disconnect();
+      };
+    }
+  }, [user]);
 
   return (
     <SocketContext.Provider value={{ socket, isConnected }}>
