@@ -13,21 +13,21 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
   if (!res.socket.server.io) {
     const path = "/api/socket/io";
     const httpServer: NetServer = res.socket.server as any;
-    const PORT = 3001;
 
     const io = new ServerIO(httpServer, {
+      path,
       addTrailingSlash: false,
       cors: { origin: "*" },
     });
 
-    // io.on("connect", (socket) => {
-    //   const _socket = socket;
-    //   console.log("socket connect", socket.id);
-    //   _socket.broadcast.emit("welcome", `Welcome ${_socket.id}`);
-    //   socket.on("disconnect", async () => {
-    //     console.log("socket disconnect");
-    //   });
-    // });
+    io.on("connect", (socket) => {
+      const _socket = socket;
+      console.log("socket connect", socket.id);
+      _socket.broadcast.emit("welcome", `Welcome ${_socket.id}`);
+      socket.on("disconnect", async () => {
+        console.log("socket disconnect");
+      });
+    });
 
     io.on("connection", (s) => {
       console.log(`Socket ${s.id} connected`);
