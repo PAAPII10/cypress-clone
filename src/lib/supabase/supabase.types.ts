@@ -428,6 +428,6 @@ export type Subscription = InferSelectModel<typeof subscriptions> & {
   prices: Price;
 };
 
-export type ProductWirhPrice = Product & {
+export type ProductWithPrice = Product & {
   prices?: Price[];
 };

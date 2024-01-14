@@ -39,3 +39,14 @@ export const middleware = async (req: NextRequest) => {
 
   return res;
 };
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - favicon.ico (favicon file)
+     */
+    "/((?!proxy|favicon.ico).*)",
+  ],
+};

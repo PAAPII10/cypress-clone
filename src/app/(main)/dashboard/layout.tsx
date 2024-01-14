@@ -1,3 +1,5 @@
+import { SubscriptionModalProvider } from "@/lib/providers/subscription-modal-provider";
+import { getActiveProductWithPrice } from "@/lib/supabase/queries";
 import { ReactNode } from "react";
 
 interface ILayout {
@@ -5,8 +7,17 @@ interface ILayout {
   params: any;
 }
 
-const layout = ({ children, params }: ILayout) => {
-  return <main className="flex over-hidden h-screen">{children}</main>;
+const layout = async ({ children, params }: ILayout) => {
+  const { data: products, error } = await getActiveProductWithPrice();
+  if (error) throw new Error();
+
+  return (
+    <main className="flex over-hidden h-screen">
+      <SubscriptionModalProvider products={products}>
+        {children}
+      </SubscriptionModalProvider>
+    </main>
+  );
 };
 
 export default layout;

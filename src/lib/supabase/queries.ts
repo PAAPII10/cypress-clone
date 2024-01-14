@@ -77,7 +77,7 @@ export const getPrivateWorkspaces = async (userId: string) => {
       data: workspaces.data,
       inTrash: workspaces.inTrash,
       logo: workspaces.logo,
-      // bannerUrl: workspaces.bannerUrl,
+      bannerUrl: workspaces.bannerUrl,
     })
     .from(workspaces)
     .where(
@@ -106,7 +106,7 @@ export const getCollaboratingWorkspaces = async (userId: string) => {
       data: workspaces.data,
       inTrash: workspaces.inTrash,
       logo: workspaces.logo,
-      // bannerUrl: workspaces.bannerUrl,
+      bannerUrl: workspaces.bannerUrl,
     })
     .from(users)
     .innerJoin(collaborators, eq(users.id, collaborators.userId))
@@ -128,7 +128,7 @@ export const getSharedWorkspaces = async (userId: string) => {
       data: workspaces.data,
       inTrash: workspaces.inTrash,
       logo: workspaces.logo,
-      // bannerUrl: workspaces.bannerUrl,
+      bannerUrl: workspaces.bannerUrl,
     })
     .from(workspaces)
     .orderBy(workspaces.createdAt)
@@ -147,6 +147,27 @@ export const addCollaborators = async (user: User[], workspaceId: string) => {
       await db.insert(collaborators).values({ workspaceId, userId: user.id });
     }
   });
+};
+
+export const getCollaborators = async (workspaceId: string) => {
+  const isValid = validate(workspaceId);
+  if (!isValid) return [];
+  const response = await db
+    .select()
+    .from(collaborators)
+    .where(eq(collaborators.workspaceId, workspaceId));
+  if (!response.length) return [];
+  console.log(response);
+  const userInformation: Promise<User | undefined>[] = response.map(
+    async (user) => {
+      const exists = await db.query.users.findFirst({
+        where: (u, { eq }) => eq(u.id, user.userId),
+      });
+      return exists;
+    }
+  );
+  const resolvedUser = await Promise.all(userInformation);
+  return resolvedUser.filter(Boolean) as User[];
 };
 
 export const removeCollaborators = async (
@@ -389,13 +410,13 @@ export const updateWorkspace = async (
   workspace: Partial<workspace>,
   workspaceId: string
 ) => {
-  if (!workspaceId) return { data: null, error: "Error" };
+  const isValid = validate(workspaceId);
+  if (!isValid) return { data: null, error: "Error" };
   try {
     await db
       .update(workspaces)
       .set(workspace)
       .where(eq(workspaces.id, workspaceId));
-    revalidatePath(`/dashoard/${workspaceId}`);
     return { data: null, error: null };
   } catch (error) {
     console.log(error);
@@ -410,4 +431,41 @@ export const getUserFromSearch = async (email: string) => {
     .from(users)
     .where(ilike(users.email, `${email}%`));
   return accounts;
+};
+
+export const getUserById = async (userId: string) => {
+  const response = (await db.query.users.findFirst({
+    where: (u, { eq }) => eq(u.id, userId),
+  })) as User;
+  return response;
+};
+
+export const updateProfile = async (user: Partial<User>, userId: string) => {
+  const isValid = validate(userId);
+  if (!isValid) return { data: null, error: "Error" };
+  if (user?.email) return { data: null, error: "Cannot update email" };
+  try {
+    await db.update(users).set(user).where(eq(users.id, userId));
+    return { data: null, error: null };
+  } catch (error) {
+    console.log(error);
+    return { data: null, error: "Error" };
+  }
+};
+
+export const getActiveProductWithPrice = async () => {
+  try {
+    const response = await db.query.products.findMany({
+      where: (pro, { eq }) => eq(pro.active, true),
+      with: {
+        prices: {
+          where: (pri, { eq }) => eq(pri.active, true),
+        },
+      },
+    });
+    if (response.length) return { data: response, error: null };
+    return { data: [], error: null };
+  } catch (error) {
+    return { data: [], error };
+  }
 };

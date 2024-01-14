@@ -46,8 +46,8 @@ const CollaboratorSearch = ({
     }, 450);
   };
 
-  const addCollaborator = (user: User) => {
-    getCollaborator(user);
+  const addCollaborator = (profile: User) => {
+    getCollaborator(profile);
   };
 
   return (
@@ -81,9 +81,9 @@ const CollaboratorSearch = ({
                 )
             )
             .filter((result) => result.id !== user?.id)
-            .map((user) => (
+            .map((profile) => (
               <div
-                key={user.id}
+                key={profile.id}
                 className="p-4 flex justify-between items-center"
               >
                 <div className="flex gap-4 items-center">
@@ -92,12 +92,12 @@ const CollaboratorSearch = ({
                     <AvatarFallback>CP</AvatarFallback>
                   </Avatar>
                   <div className="text-sm gap-2 overflow-hidden overflow-ellipsis w-[180px] text-muted-foreground">
-                    {user.email}
+                    {profile.email}
                   </div>
                 </div>
                 <Button
                   variant="secondary"
-                  onClick={() => addCollaborator(user)}
+                  onClick={() => addCollaborator(profile)}
                 >
                   Add
                 </Button>

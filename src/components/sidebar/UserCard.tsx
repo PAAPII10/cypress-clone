@@ -8,6 +8,7 @@ import CypressProfileIcon from "../icons/cypressProfileIcon";
 import ModeToggle from "../global/ModeToggle";
 import { LogOut } from "lucide-react";
 import LogoutButton from "../global/LogoutButton";
+import { getUserById } from "@/lib/supabase/queries";
 
 interface UserCardProps {
   subscription: Subscription | null;
@@ -20,9 +21,7 @@ const UserCard: React.FC<UserCardProps> = async ({ subscription }) => {
   } = await supabase.auth.getUser();
 
   if (!user) return;
-  const response = await db.query.users.findFirst({
-    where: (u, { eq }) => eq(u.id, user.id),
-  });
+  const response = await getUserById(user.id);
   let avatarPath;
   if (!response) return;
   if (!response.avatarUrl) avatarPath = "";

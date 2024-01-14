@@ -16,6 +16,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import Dropdown from "./Dropdown";
+import useSupabaseRealtime from "@/lib/hooks/useSupabaseRealtime";
+import { useSubscriptionModal } from "@/lib/providers/subscription-modal-provider";
 
 interface IFolderDropdownListProps {
   workspaceFolders: Folder[];
@@ -28,7 +30,9 @@ const FolderDropdownList = ({
 }: IFolderDropdownListProps) => {
   //WIP local state folders
   //WIP set real time updates
+  useSupabaseRealtime();
   const { state, dispatch, folderId } = useAppState();
+  const { open, setOpen } = useSubscriptionModal();
   const { toast } = useToast();
   const [folders, setFolders] = useState(workspaceFolders);
   const { subscription } = useSupabaseUser();
@@ -63,8 +67,10 @@ const FolderDropdownList = ({
 
   // app folder
   const addFolderHandler = async () => {
-    // if(folders.length >=3 && !subscription){
-    // }
+    if (folders.length >= 3 && !subscription) {
+      setOpen(true);
+      return;
+    }
     const newFolder: Folder = {
       data: null,
       id: v4(),
