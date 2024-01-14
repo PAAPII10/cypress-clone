@@ -35,7 +35,9 @@ export const SocketProvider = ({ children }: ISocketProviderProps) => {
 
   useEffect(() => {
     if (user) {
-      const socketInstance = new (ClientIO as any)();
+      const socketInstance = new (ClientIO as any)(
+        process.env.NEXT_PUBLIC_SITE_URL
+      );
 
       socketInstance.on("connect", () => {
         setIsConnected(true);
