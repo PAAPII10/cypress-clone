@@ -35,10 +35,7 @@ export const SocketProvider = ({ children }: ISocketProviderProps) => {
 
   useEffect(() => {
     if (user) {
-      const socketInstance = (ClientIO as any)(
-        process.env.NEXT_PUBLIC_SITE_URL!,
-        { path: "/api/socket/io" }
-      );
+      const socketInstance = new (ClientIO as any)();
 
       socketInstance.on("connect", () => {
         setIsConnected(true);
