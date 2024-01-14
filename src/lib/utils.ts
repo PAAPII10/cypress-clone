@@ -22,8 +22,7 @@ export const toDateTime = (secs: number) => {
 };
 
 export const getURL = () => {
-  let url =
-    process.env.NEXT_PUBLIC_SITE_URL ?? process.env.NEXT_PUBLIC_RAILWAY_URL;
+  let url = process.env.NEXT_PUBLIC_SITE_URL;
   if (url) {
     url = url.includes("http") ? url : `https://${url}`;
     url = url.charAt(url.length - 1) === "/" ? url : `${url}/`;

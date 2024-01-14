@@ -32,10 +32,7 @@ export const SocketProvider = ({ children }: ISocketProviderProps) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const socketInstance = new (ClientIO as any)(process.env.NEXT_SOCKET_URL!, {
-      path: "/api/socket/io",
-      addTrailingSlash: false,
-    });
+    const socketInstance = new (ClientIO as any)();
 
     socketInstance.on("connect", () => {
       setIsConnected(true);
