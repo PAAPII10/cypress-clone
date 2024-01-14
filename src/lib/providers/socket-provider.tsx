@@ -35,7 +35,10 @@ export const SocketProvider = ({ children }: ISocketProviderProps) => {
 
   useEffect(() => {
     if (user) {
-      const socketInstance = new (ClientIO as any)();
+      const socketInstance = new (ClientIO as any)("/", {
+        transports: ["websocket"],
+        upgrade: false,
+      });
 
       socketInstance.on("connect", () => {
         setIsConnected(true);

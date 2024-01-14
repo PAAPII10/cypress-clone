@@ -15,7 +15,10 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
     const httpServer: NetServer = res.socket.server as any;
     const PORT = 3001;
 
-    const io = new ServerIO(httpServer);
+    const io = new ServerIO(httpServer, {
+      addTrailingSlash: false,
+      cors: { origin: "*" },
+    });
 
     // io.on("connect", (socket) => {
     //   const _socket = socket;
