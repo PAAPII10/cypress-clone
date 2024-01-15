@@ -40,6 +40,7 @@ export const SocketProvider = ({ children }: ISocketProviderProps) => {
         {
           path: "/api/socket/io",
           addTrailingSlash: false,
+          transports: ["websocket"],
         }
       );
 
