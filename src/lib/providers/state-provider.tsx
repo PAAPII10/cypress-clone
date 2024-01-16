@@ -7,6 +7,7 @@ import React, {
   useEffect,
   useMemo,
   useReducer,
+  useState,
 } from "react";
 import { File, Folder, workspace } from "../supabase/supabase.types";
 import { usePathname } from "next/navigation";
@@ -430,6 +431,8 @@ const AppStateContext = createContext<
       workspaceId: string | undefined;
       folderId: string | undefined;
       fileId: string | undefined;
+      selectedNavForMob: string;
+      onNavNarChangeForMob: (currentPage: string) => void;
     }
   | undefined
 >(undefined);
@@ -440,6 +443,7 @@ interface AppStateProviderProps {
 
 const AppStateProvider: React.FC<AppStateProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
+  const [selectedNavForMob, setSelectedNavForMob] = useState("pages");
   const pathname = usePathname();
 
   const workspaceId = useMemo(() => {
@@ -486,9 +490,21 @@ const AppStateProvider: React.FC<AppStateProviderProps> = ({ children }) => {
     console.log("App State Changed", state);
   }, [state]);
 
+  const onNavNarChangeForMob = (currentPage: string) => {
+    setSelectedNavForMob(currentPage);
+  };
+
   return (
     <AppStateContext.Provider
-      value={{ state, dispatch, workspaceId, folderId, fileId }}
+      value={{
+        state,
+        dispatch,
+        workspaceId,
+        folderId,
+        fileId,
+        selectedNavForMob,
+        onNavNarChangeForMob,
+      }}
     >
       {children}
     </AppStateContext.Provider>

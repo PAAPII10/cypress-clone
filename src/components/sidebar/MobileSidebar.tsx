@@ -1,9 +1,10 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { Menu } from "lucide-react";
 import CypressPageIcon from "../icons/cypressPageIcon";
 import { cn } from "@/lib/utils";
+import { useAppState } from "@/lib/providers/state-provider";
 
 interface IMobileSidebarProps {
   children: ReactNode;
@@ -23,10 +24,11 @@ export const nativeNavigation = [
 ] as const;
 
 const MobileSidebar = ({ children }: IMobileSidebarProps) => {
-  const [selectedNav, setSelectedNav] = useState("");
+  const { selectedNavForMob, onNavNarChangeForMob } = useAppState();
+
   return (
     <>
-      {selectedNav === "sidebar" && <>{children}</>}
+      {selectedNavForMob === "sidebar" && <>{children}</>}
       <nav className="bg-black/10 backdrop-blur-lg sm:hidden fixed z-50 bottom-0 right-0 left-0">
         <ul className="flex justify-between items-center p-4">
           {nativeNavigation.map((item) => (
@@ -34,13 +36,13 @@ const MobileSidebar = ({ children }: IMobileSidebarProps) => {
               key={item.id}
               className="flex items-center flex-col justify-center"
               onClick={() => {
-                setSelectedNav(item.id);
+                onNavNarChangeForMob(item.id);
               }}
             >
               <item.customIcon />
               <small
                 className={cn("", {
-                  "text-muted-foreground": selectedNav !== item.id,
+                  "text-muted-foreground": selectedNavForMob !== item.id,
                 })}
               >
                 {item.title}

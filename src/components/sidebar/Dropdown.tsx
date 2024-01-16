@@ -46,7 +46,8 @@ const Dropdown = ({
   const { toast } = useToast();
   const supabase = createClientComponentClient();
   const { user } = useSupabaseUser();
-  const { state, dispatch, workspaceId, folderId } = useAppState();
+  const { state, dispatch, workspaceId, folderId, onNavNarChangeForMob } =
+    useAppState();
   const [isEditing, setIsEditing] = useState(false);
 
   // folder title synced with server data and local data
@@ -79,6 +80,7 @@ const Dropdown = ({
 
   // Navigate the user to a different page
   const navigatePage = (accordionId: string, type: string) => {
+    onNavNarChangeForMob("pages");
     if (type === "folder") {
       router.push(`/dashboard/${workspaceId}/${accordionId}`);
     }
