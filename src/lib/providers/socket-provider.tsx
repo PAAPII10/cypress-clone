@@ -32,11 +32,9 @@ export const SocketProvider = ({ children }: ISocketProviderProps) => {
   const { user } = useSupabaseUser();
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
-
   useEffect(() => {
     if (user) {
-      const socketInstance = new (ClientIO as any)(`/`, {
-        path: "/api/socket/io",
+      const socketInstance = new (ClientIO as any)(process.env.WEB_SOCKET_URL, {
         transports: ["websocket"],
       });
 
@@ -50,7 +48,9 @@ export const SocketProvider = ({ children }: ISocketProviderProps) => {
 
       socketInstance.on("connect_error", async (err: any) => {
         console.log(`connect_error due to ${err.message}`);
-        await fetch("/api/socket/io");
+        if (process.env.WEB_SOCKET_URL) {
+          await fetch(process.env.WEB_SOCKET_URL);
+        }
       });
 
       setSocket(socketInstance);

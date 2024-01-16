@@ -15,7 +15,7 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
     const io = new ServerIO({
       path,
       cors: { origin: "*" },
-    }).listen((process.env.PORT as unknown as number) || 3002);
+    });
 
     io.on("connect", (socket) => {
       const _socket = socket;
