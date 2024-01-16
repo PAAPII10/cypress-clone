@@ -39,6 +39,7 @@
     "dotenv": "^16.3.1",
     "drizzle-orm": "^0.29.2",
     "emoji-picker-react": "^4.6.0",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.302.0",
     "next": "14.0.4",
     "next-themes": "^0.2.1",
@@ -57,6 +58,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.202",
     "@types/node": "^20",
     "@types/quill": "^2.0.14",
     "@types/react": "^18",

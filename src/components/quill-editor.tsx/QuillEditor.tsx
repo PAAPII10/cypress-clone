@@ -36,6 +36,8 @@ import BannerUpload from "../banner-upload/BannerUpload";
 import { XCircleIcon } from "lucide-react";
 import { useSocket } from "@/lib/providers/socket-provider";
 import { useSupabaseUser } from "@/lib/providers/supabase-user-provider";
+import { uniqBy } from "lodash";
+import { cn } from "@/lib/utils";
 
 interface IQuillEditorProps {
   dirDetails: File | Folder | workspace;
@@ -551,7 +553,17 @@ const QuillEditor = ({ dirDetails, fileId, dirType }: IQuillEditorProps) => {
       quill.off("selection-change", selectionChangeHandler);
       if (saveTimeRef.current) clearTimeout(saveTimeRef.current);
     };
-  }, [quill, socket, fileId, user, details, workspaceId, folderId, dispatch]);
+  }, [
+    quill,
+    socket,
+    fileId,
+    user,
+    details,
+    workspaceId,
+    folderId,
+    dispatch,
+    dirType,
+  ]);
 
   useEffect(() => {
     if (quill === null || socket === null) return;
@@ -573,7 +585,9 @@ const QuillEditor = ({ dirDetails, fileId, dirType }: IQuillEditorProps) => {
       .on("presence", { event: "sync" }, () => {
         const newState = room.presenceState();
         const newCollaborators = Object.values(newState).flat() as any;
-        setCollaborators(newCollaborators);
+        setCollaborators(
+          uniqBy(newCollaborators, "id") as unknown as ICollaborators[]
+        );
         if (user) {
           const allCursors: any = [];
           newCollaborators.forEach((collaborator: ICollaborators) => {
@@ -611,7 +625,6 @@ const QuillEditor = ({ dirDetails, fileId, dirType }: IQuillEditorProps) => {
 
   return (
     <>
-      {isConnected ? "Connected" : "Not connected"}
       <div className="relative">
         {details.inTrash && (
           <article className="py-2 z-40 bg-[#EB5757] flex md:flex-row flex-col justify-center items-center gap-4 flex-wrap">
@@ -662,6 +675,17 @@ const QuillEditor = ({ dirDetails, fileId, dirType }: IQuillEditorProps) => {
                 </TooltipProvider>
               ))}
             </div>
+            {isConnected && collaborators.length > 1 && (
+              <Badge
+                variant="secondary"
+                className={cn("top-4 text-white right-4 z-50", {
+                  "bg-green-600": isConnected,
+                  "bg-red-600": !isConnected,
+                })}
+              >
+                {isConnected ? "Live editing" : "Live editing is off"}
+              </Badge>
+            )}
             {saving ? (
               <Badge
                 variant="secondary"

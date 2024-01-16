@@ -60,7 +60,6 @@ const BannerUploadForm = ({ dirType, id }: IBannerUploadFormProps) => {
             variant: "destructive",
           });
         }
-        console.log({ data });
         filePath = data?.path;
       };
 

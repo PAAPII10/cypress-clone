@@ -2,7 +2,6 @@ import React from "react";
 import { Subscription } from "@/lib/supabase/supabase.types";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import db from "@/lib/supabase/db";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import CypressProfileIcon from "../icons/cypressProfileIcon";
 import ModeToggle from "../global/ModeToggle";
