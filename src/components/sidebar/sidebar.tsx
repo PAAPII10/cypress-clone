@@ -73,7 +73,7 @@ const Sidebar = async ({ params, className }: ISidebarProps) => {
           subscription={subscriptionData}
         />
         <NativeNavigation myWorkspaceId={params.workspaceId} />
-        <ScrollArea className="relative h-[70%] lg:h-[450px]">
+        <ScrollArea className="relative h-[70%] lg:h-[60%]">
           <div className="pointer-events-none w-full absolute bottom-0 h-20 bg-gradient-to-t from-background to-transparent z-40" />
           <FolderDropdownList
             workspaceFolders={workspaceFolderData || []}
