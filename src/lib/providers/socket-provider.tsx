@@ -36,6 +36,7 @@ export const SocketProvider = ({ children }: ISocketProviderProps) => {
   useEffect(() => {
     if (user) {
       const socketInstance = new (ClientIO as any)(`/`, {
+        path: "/api/socket/io",
         transports: ["websocket"],
       });
 

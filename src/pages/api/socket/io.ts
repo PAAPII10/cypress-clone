@@ -11,13 +11,11 @@ export const config = {
 
 const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
   if (!res.socket.server.io) {
-    const httpServer: NetServer = res.socket.server as any;
     const path = "/api/socket/io";
-    const io = new ServerIO(httpServer, {
+    const io = new ServerIO({
       path,
-      addTrailingSlash: false,
       cors: { origin: "*" },
-    });
+    }).listen((process.env.SOCKET_PORT as unknown as number) || 3002);
 
     io.on("connect", (socket) => {
       const _socket = socket;
