@@ -10,6 +10,6 @@ export const GET = async (req: NextRequest) => {
     const supabase = createRouteHandlerClient({ cookies });
     await supabase.auth.exchangeCodeForSession(code);
   }
-
-  return NextResponse.redirect(`${requestUrl.origin}/dashboard`);
+  // test this later
+  return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL}/dashboard`);
 };
