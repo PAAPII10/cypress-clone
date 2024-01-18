@@ -110,6 +110,11 @@ body {
   background-size: 30px 30px;
 } */
 
+.custom-placeholder-style .ql-editor.ql-blank:before {
+  content: attr(data-placeholder);
+  color: #888; /* Set your desired color here */
+}
+
 .ql-toolbar::-webkit-scrollbar {
   display: none;
 }

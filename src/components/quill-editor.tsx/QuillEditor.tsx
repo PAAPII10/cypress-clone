@@ -1,6 +1,7 @@
 "use client";
 
 import "quill/dist/quill.snow.css";
+import "../../app/globals.css";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { File, Folder, workspace } from "@/lib/supabase/supabase.types";
@@ -127,6 +128,7 @@ const QuillEditor = ({ dirDetails, fileId, dirType }: IQuillEditorProps) => {
       ImportedQuill.register("modules/cursors", QuillCursors);
       const q = new ImportedQuill(editor, {
         theme: "snow",
+        placeholder: "Start typing here.....",
         modules: {
           toolbar: TOOLBAR_OPTIONS,
           cursors: {
@@ -134,7 +136,9 @@ const QuillEditor = ({ dirDetails, fileId, dirType }: IQuillEditorProps) => {
           },
         },
       });
-
+      // Add a custom class to the Quill editor container
+      editor.classList.add("custom-placeholder-style");
+      q.focus();
       setQuill(q);
     }
   }, []);
@@ -404,6 +408,7 @@ const QuillEditor = ({ dirDetails, fileId, dirType }: IQuillEditorProps) => {
             workspaceId,
           },
         });
+        quill.setSelection(quill.getLength(), 0);
       }
       if (dirType === "folder") {
         const { data: selectedDir, error } = await getFolderDetails(fileId);
@@ -429,6 +434,8 @@ const QuillEditor = ({ dirDetails, fileId, dirType }: IQuillEditorProps) => {
             workspaceId,
           },
         });
+        // await sleep(500);
+        quill.setSelection(quill.getLength(), 0);
       }
 
       if (dirType === "workspace") {
@@ -445,7 +452,7 @@ const QuillEditor = ({ dirDetails, fileId, dirType }: IQuillEditorProps) => {
 
         if (!selectedDir[0]?.data) return;
 
-        quill.setContents(JSON.parse(selectedDir[0].data || ""));
+        await quill.setContents(JSON.parse(selectedDir[0].data || ""));
         dispatch({
           type: "UPDATE_WORKSPACE",
           payload: {
@@ -453,6 +460,7 @@ const QuillEditor = ({ dirDetails, fileId, dirType }: IQuillEditorProps) => {
             workspaceId: fileId,
           },
         });
+        quill.setSelection(quill.getLength(), 0);
       }
     };
     fetchInformation();
@@ -755,7 +763,7 @@ const QuillEditor = ({ dirDetails, fileId, dirType }: IQuillEditorProps) => {
             {dirType.toUpperCase()}
           </span>
         </div>
-        <div id="container" ref={wrapperRef} className="max-w-[800px]"></div>
+        <div id="container" ref={wrapperRef} className={cn("max-w-[800px]")} />
       </div>
     </>
   );
