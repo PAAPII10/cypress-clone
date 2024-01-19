@@ -763,7 +763,11 @@ const QuillEditor = ({ dirDetails, fileId, dirType }: IQuillEditorProps) => {
             {dirType.toUpperCase()}
           </span>
         </div>
-        <div id="container" ref={wrapperRef} className={cn("max-w-[800px]")} />
+        <div
+          id="container"
+          ref={wrapperRef}
+          className={cn("max-w-[800px] mb-40")}
+        />
       </div>
     </>
   );

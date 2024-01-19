@@ -9,6 +9,7 @@ import AppStateProvider from "@/lib/providers/state-provider";
 import { SupabaseUserProvider } from "@/lib/providers/supabase-user-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { SocketProvider } from "@/lib/providers/socket-provider";
+import NextTopLoader from "nextjs-toploader";
 
 const dmSans = DM_Sans({ subsets: ["latin"] });
 
@@ -29,6 +30,7 @@ export default function RootLayout({
           <AppStateProvider>
             <SupabaseUserProvider>
               <SocketProvider>
+                <NextTopLoader />
                 {children}
                 <Toaster />
               </SocketProvider>

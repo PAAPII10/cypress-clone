@@ -11,5 +11,5 @@ export const GET = async (req: NextRequest) => {
     await supabase.auth.exchangeCodeForSession(code);
   }
   // test this later
-  return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL}/dashboard`);
+  return NextResponse.redirect(`${window.location.origin}/dashboard`);
 };

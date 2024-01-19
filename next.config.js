@@ -4,9 +4,6 @@ const nextConfig = {
   env: {
     WEB_SOCKET_URL: process.env.WEB_SOCKET_URL,
   },
-  style: {
-    modules: true,
-  },
   images: {
     domains: ["vbvmmthyebnlbcfqglxn.supabase.co"],
     // remotePatterns: [
